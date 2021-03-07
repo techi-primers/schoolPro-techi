@@ -1,0 +1,35 @@
+#Create a service file in /usr/lib/systemd/system/investme.service . Let the contents be:
+
+[Unit]
+Description=Invest me service
+
+[Service]
+User=ec2-user
+# The configuration file application.yml should be here:
+# WorkingDirectory=/home/myuser/my-apps 
+ExecStart=/usr/bin/java -Xms2024m -Xmx2024m -jar /opt/investme/jars/investme-1.0.0.jar --server.port=8443 --spring.profiles.active=prod
+SuccessExitStatus=143
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo chown ec2-user opt
+chmod -R 0777 /opt
+sudo systemctl daemon-reload	<== notifies systemd of the new service file
+sudo systemctl enable investme.service		<== enable it so it runs on boot
+// investme.service will be added to the dir /etc/systemd/system/multi-user.target.wants. This dir indicates what services to start on boot
+
+sudo systemctl start investme.service
+sudo systemctl status investme.service   <== check that the service is running fine
+journalctl -u investme.service --since "2015-06-26 23:15:00"  <== for logs
+
+sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443 <== redirection from 443 to 8443
+sudo iptables -t nat -L   <==  verify redirection
+sudo sh -c "iptables-save > /etc/iptables.rules"  <== save the configuration
+sudo yum install iptables-services  <== save the configuration
+service iptables save  <== save the configuration
+sudo iptables -t nat -D PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080  <== remove redirection

@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "spring.servlet.max-request-size",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.servlet.max-request-size'"
+  },
+  {
+    "name": "spring.servlet.max-file-size",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.servlet.max-file-size'"
+  },
+  {
+    "name": "eureka.instance.hostname",
+    "type": "java.lang.String",
+    "description": "A description for 'eureka.instance.hostname'"
+  },
+  {
+    "name": "eureka.client.register-with-eureka",
+    "type": "java.lang.String",
+    "description": "A description for 'eureka.client.register-with-eureka'"
+  },
+  {
+    "name": "eureka.client.fetch-registry",
+    "type": "java.lang.String",
+    "description": "A description for 'eureka.client.fetch-registry'"
+  },
+  {
+    "name": "eureka.client.service-url.default-zone",
+    "type": "java.lang.String",
+    "description": "A description for 'eureka.client.service-url.default-zone'"
+  },
+  {
+    "name": "cloudinary.cloud_name",
+    "type": "java.lang.String",
+    "description": "A description for 'cloudinary.cloud_name'"
+  }
+]}

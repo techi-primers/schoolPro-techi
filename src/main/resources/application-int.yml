@@ -1,0 +1,81 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 15MB
+  application:
+    name: investMe
+  datasource:
+    url: jdbc:postgresql://nvstmcom.cpju1axw1ctu.us-east-2.rds.amazonaws.com:5432/nvstmcom_db
+    username: nvstmcom
+    password: PradeepInvestME
+    testwhileIdle: true
+    validationQuery: SELECT 1
+    minIdle: 10
+    maxIdle: 50
+    initialSize: 10
+    maxWait: 60000
+    testOnBorrow: true
+    hikari:
+      maxLifetime: 30000
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: email
+    password: password
+    sign: InvestMe Team
+    location: United State
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 443
+  ssl:
+    key-store: /etc/letsencrypt/live/nvstm.com/keystore.p12
+    key-store-password: password
+    keyStoreType: PKCS12
+
+security:
+  require-ssl: true
+  public:
+    endpoint: /invest/me/api/api-docs/**,/invest/me/api/swagger-ui/**,/invest/me/api/authentication,/invest/me/api/students,/invest/me/api/investors,/invest/me/api/companies,/invest/me/api/totp,/invest/me/api/reset,/invest/me/api/contents/cgu,/invest/me/api/accounts/pdp
+  jwt:
+    secret: secret
+    expiration:
+      time: 2592000000
+  encryption:
+    secret: InVeStME
+
+springdoc:
+  swagger-ui:
+    path: /invest/me/api/swagger-ui
+  api-docs:
+    path: /invest/me/api/api-docs
+     
+multipart:
+  enabled: true
+  
+cloudinary:
+  cloud_name: 
+  api_key: 
+  api_secret: 
+      
+        
+app:
+  firebase-configuration-file : 
+
+    
+              
