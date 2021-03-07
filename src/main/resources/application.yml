@@ -6,9 +6,9 @@ spring:
   application:
     name: investMe
   datasource:
-    url: jdbc:postgresql://localhost:5432/nvstmcom_db?currentSchema=nvstmcom_db
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://ec2-54-166-242-77.compute-1.amazonaws.com:5432/d8n52r1l9ecr89
+    username: aaxnzognztjrls
+    password: 9f9a1738ed089a99ebc6ffb56eae697798f630ea658a47369cdd3ab166057290
     testwhileIdle: true
     validationQuery: SELECT 1
     minIdle: 10
