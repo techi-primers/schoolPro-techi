@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -118,6 +119,7 @@ public class StudentImplService implements StudentService {
 
 	@Override
 	public void bookMarkedInvestorOrCompany(Long id) throws CustomException {
+		System.out.println(id);
 		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Account account = this.accountRepository.findByEmail(email);
 		Account account2 = this.accountRepository.findById(id).orElseThrow(() -> new CustomException(
