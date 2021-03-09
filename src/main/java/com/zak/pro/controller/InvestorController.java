@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,4 +83,13 @@ public class InvestorController {
 	public void unbookMarkedProject(@PathVariable Long id) throws NoSuchMessageException, CustomException {
 		this.investorService.unbookmarkProjectForInvestorAndCompany(id);
 	}
+
+	@PostMapping("/assignproject/{projectId}")
+	@PreAuthorize("hasAuthority('INVESTOR')")
+	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
+	public ResponseEntity assignProjectToInvester(@PathVariable Long projectId)  {
+		return this.investorService.assignProjectToInvester(projectId);
+	}
+
+
 }
