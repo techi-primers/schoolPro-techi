@@ -9,6 +9,7 @@ import com.zak.pro.dto.ProjectDTO;
 import com.zak.pro.entity.Investor;
 import com.zak.pro.enumartion.Category;
 import com.zak.pro.exception.CustomException;
+import org.springframework.http.ResponseEntity;
 
 /**
  * 
@@ -29,4 +30,5 @@ public interface InvestorService {
 
 	void unbookmarkProjectForInvestorAndCompany(Long id) throws CustomException;
 
+    ResponseEntity assignProjectToInvester(Long projectId);
 }

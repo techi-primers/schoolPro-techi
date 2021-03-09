@@ -2,33 +2,31 @@ package com.zak.pro.service.Impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.zak.pro.entity.*;
+import com.zak.pro.repository.*;
+import org.apache.catalina.UserDatabase;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.zak.pro.dto.InvestorDTO;
 import com.zak.pro.dto.ProjectDTO;
-import com.zak.pro.entity.Account;
-import com.zak.pro.entity.Company;
-import com.zak.pro.entity.Investor;
-import com.zak.pro.entity.Project;
-import com.zak.pro.entity.Role;
 import com.zak.pro.enumartion.Category;
 import com.zak.pro.exception.CustomException;
-import com.zak.pro.repository.AccountRepository;
-import com.zak.pro.repository.CompanyRepository;
-import com.zak.pro.repository.InvestorRepository;
-import com.zak.pro.repository.ProjectRepository;
-import com.zak.pro.repository.RoleRepository;
 import com.zak.pro.service.CompanyService;
 import com.zak.pro.service.InvestorService;
 import com.zak.pro.util.PasswordUtil;
@@ -71,7 +69,12 @@ public class InvestorImplService implements InvestorService {
 	@Autowired
 	private ProjectRepository projectRepository;
 
-	@Override
+    private Logger logger = LogManager.getLogger(InvestorImplService.class);
+
+    @Autowired
+    private InvesterProjectRepository investorProjectRepository;
+
+    @Override
 	public void addCategories(List<Category> intrests) throws NoSuchMessageException, CustomException {
 		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Investor investor = this.investorRepository.findByEmail(email);
@@ -185,4 +188,46 @@ public class InvestorImplService implements InvestorService {
 			}
 		}
 	}
+
+    @Override
+    public ResponseEntity assignProjectToInvester(Long projectId) {
+
+		if(projectId!=null) {
+			Optional<Project> project = projectRepository.findById(projectId);
+			return project.map(pro -> {
+
+				String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				if(email!=null) {
+					Account account = this.accountRepository.findByEmail(email);
+
+					return Optional.ofNullable(account).map(acc-> {
+                        Long accountId = acc.getId();
+                        String investerEmail = acc.getEmail();
+                        InvesterProject investPro = new InvesterProject();
+                        investPro.setInvesterId(accountId);
+                        investPro.setInvesterEmail(investerEmail);
+                        investPro.setProjectId(projectId);
+                        try{
+                            InvesterProject savedObj;
+                            savedObj = this.investorProjectRepository.save(investPro);
+                            logger.info("invester projects saved!!");
+                            return new ResponseEntity(savedObj,HttpStatus.OK);
+                        }catch (Exception e ) {
+                            e.printStackTrace();
+                            logger.info("catch when saving investerproject...");
+                            return new ResponseEntity(HttpStatus.NOT_FOUND);
+                        }
+
+                    }).orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
+
+				} else {
+					return new ResponseEntity(HttpStatus.NOT_FOUND);
+				}
+
+			}).orElse( new ResponseEntity(HttpStatus.NOT_FOUND));
+		}else {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+
+    }
 }

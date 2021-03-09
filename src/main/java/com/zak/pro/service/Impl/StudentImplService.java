@@ -119,9 +119,11 @@ public class StudentImplService implements StudentService {
 
 	@Override
 	public void bookMarkedInvestorOrCompany(Long id) throws CustomException {
-		System.out.println(id);
+		System.out.println("invester id"+id);
 		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("account from student");
 		Account account = this.accountRepository.findByEmail(email);
+        System.out.println("account from invester");
 		Account account2 = this.accountRepository.findById(id).orElseThrow(() -> new CustomException(
 				this.messageSource.getMessage("id.not.found", null, LocaleContextHolder.getLocale())));
 		if (account instanceof Student) {
