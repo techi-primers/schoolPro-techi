@@ -6,7 +6,7 @@ spring:
   application:
     name: investMe
   datasource:
-    url: jdbc:postgresql:localhost:5432/nvstmcom_db?currentSchema=nvstmcom_db
+    url: jdbc:postgresql://localhost:5432/nvstmcom_db?currentSchema=nvstmcom_db
     username: postgres
     password: postgres
     testwhileIdle: true
