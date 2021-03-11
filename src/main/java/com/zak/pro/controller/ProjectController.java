@@ -79,7 +79,7 @@ public class ProjectController {
 	@PostMapping("{id}/attachements")
 	@PreAuthorize("hasAuthority('STUDENT')")
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
-	public void uploadAttachements(@PathVariable long id, @RequestPart MultipartFile[] files,
+	public void uploadAttachements(@PathVariable long id, @RequestParam("file") MultipartFile[] files,
 			@RequestParam(required = false) int show) throws Exception {
 		this.projectService.uploadAttachements(id, files, show);
 	}

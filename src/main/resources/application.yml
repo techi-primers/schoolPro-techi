@@ -61,9 +61,9 @@ multipart:
   enabled: true
   
 cloudinary:
-  cloud_name: 
-  api_key: 
-  api_secret: 
+  cloud_name: techiprimer
+  api_key: 815176751335227
+  api_secret: Lst0rp_kjYatr-fAfjMycRS5BwQ
       
         
 app:
