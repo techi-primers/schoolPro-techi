@@ -230,4 +230,18 @@ public class InvestorImplService implements InvestorService {
 		}
 
     }
+
+    @Override
+    public ResponseEntity getInvesterAssignedProjects() {
+
+		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return Optional.ofNullable(email).map(rec -> {
+			Account account = this.accountRepository.findByEmail(email);
+			return Optional.ofNullable(account).map(acc -> {
+				List<InvesterProject> investedProjects = this.investorProjectRepository.findByInvesterId(acc.getId());
+				return new ResponseEntity(investedProjects, HttpStatus.OK);
+			}).orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
+		}).orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
+
+    }
 }

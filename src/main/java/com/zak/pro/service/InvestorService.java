@@ -31,4 +31,6 @@ public interface InvestorService {
 	void unbookmarkProjectForInvestorAndCompany(Long id) throws CustomException;
 
     ResponseEntity assignProjectToInvester(Long projectId);
+
+    ResponseEntity getInvesterAssignedProjects();
 }

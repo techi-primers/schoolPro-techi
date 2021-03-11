@@ -91,5 +91,12 @@ public class InvestorController {
 		return this.investorService.assignProjectToInvester(projectId);
 	}
 
+	@GetMapping("/getInvesterAssignedProjects")
+	@PreAuthorize("hasAuthority('INVESTOR')")
+	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
+	public ResponseEntity getInvesterAssignedProjects()  {
+		return this.investorService.getInvesterAssignedProjects();
+	}
+
 
 }
