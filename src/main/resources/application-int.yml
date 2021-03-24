@@ -75,7 +75,7 @@ cloudinary:
       
         
 app:
-  firebase-configuration-file : 
+  firebase-configuration-file : school-project-investme-firebase-adminsdk-j5j12-b282a07030.json
 
     
               
