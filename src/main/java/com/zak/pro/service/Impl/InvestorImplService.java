@@ -113,6 +113,12 @@ public class InvestorImplService implements InvestorService {
 		if ((investordto != null) && (this.accountRepository.findByEmail(investordto.getEmail()) == null)
 				&& (this.accountRepository.findByMobile(investordto.getMobile()) == null)) {
 			Investor investor = this.modelMapper.map(investordto, Investor.class);
+			investor.setPublic_id(investordto.getPublicId());
+			if (investor.getPublic_id()==null || investor.getPublic_id() == "") {
+				throw new CustomException(
+						this.messageSource.getMessage("publicid.null", null, LocaleContextHolder.getLocale()));
+
+			}
 			if (!investor.isAcceptCGU()) {
 				throw new CustomException(
 						this.messageSource.getMessage("cgu.not.accepted", null, LocaleContextHolder.getLocale()));
