@@ -43,10 +43,6 @@ spring:
 
 server:
   port: 9000
-  ssl:
-    key-store: /etc/letsencrypt/live/nvstm.com/keystore.p12
-    key-store-password: password
-    keyStoreType: PKCS12
 
 security:
   require-ssl: true
