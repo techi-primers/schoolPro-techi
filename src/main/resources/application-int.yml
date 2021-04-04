@@ -6,9 +6,9 @@ spring:
   application:
     name: investMe
   datasource:
-    url: jdbc:postgresql://nvstmcom.cpju1axw1ctu.us-east-2.rds.amazonaws.com:5432/nvstmcom_db
-    username: nvstmcom
-    password: PradeepInvestME
+    url: jdbc:postgresql://investmebeta-db.c2ymzed7r3ta.us-east-2.rds.amazonaws.com:5432/investmebeta_db?currentSchema=investmebeta_db
+    username: postgres
+    password: postgrestechi
     testwhileIdle: true
     validationQuery: SELECT 1
     minIdle: 10
@@ -42,7 +42,7 @@ spring:
             enable: true
 
 server:
-  port: 443
+  port: 9000
   ssl:
     key-store: /etc/letsencrypt/live/nvstm.com/keystore.p12
     key-store-password: password
@@ -64,14 +64,14 @@ springdoc:
     path: /invest/me/api/swagger-ui
   api-docs:
     path: /invest/me/api/api-docs
-     
+
 multipart:
   enabled: true
-  
+
 cloudinary:
-  cloud_name: 
-  api_key: 
-  api_secret: 
+  cloud_name: techiprimer
+  api_key: 815176751335227
+  api_secret: Lst0rp_kjYatr-fAfjMycRS5BwQ
       
         
 app:

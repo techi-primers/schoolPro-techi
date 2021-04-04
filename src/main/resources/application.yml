@@ -6,9 +6,9 @@ spring:
   application:
     name: investMe
   datasource:
-    url: jdbc:postgresql://ec2-54-166-242-77.compute-1.amazonaws.com:5432/d8n52r1l9ecr89
-    username: aaxnzognztjrls
-    password: 9f9a1738ed089a99ebc6ffb56eae697798f630ea658a47369cdd3ab166057290
+    url: jdbc:postgresql://investmebeta-db.c2ymzed7r3ta.us-east-2.rds.amazonaws.com:5432/investmebeta_db?currentSchema=investmebeta_db
+    username: postgres
+    password: postgrestechi
     testwhileIdle: true
     validationQuery: SELECT 1
     minIdle: 10
