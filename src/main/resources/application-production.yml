@@ -6,9 +6,9 @@ spring:
   application:
     name: InvestMe
   datasource:
-    url: jdbc:postgresql://localhost:5432/investme_db
-    username: investme
-    password: PradeepInvestMeProject
+    url: jdbc:postgresql://investmepro-db.c2ymzed7r3ta.us-east-2.rds.amazonaws.com:5432/investmeprod_db?currentSchema=investmeprod_db
+    username: postgres
+    password: postgrestechi
     testwhileIdle: true
     validationQuery: SELECT 1
     minIdle: 10
@@ -18,8 +18,9 @@ spring:
     testOnBorrow: true
     hikari:
       maxLifetime: 30000
+
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
@@ -29,8 +30,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${investme_email}
-    password: ${investme_password}
+    username: email
+    password: password
     sign: InvestMe Team
     location: United State
     properties:
@@ -41,11 +42,8 @@ spring:
             enable: true
 
 server:
-  port: 443
-  ssl:
-    key-store: /etc/letsencrypt/live/nvstm.com/keystore.p12
-    key-store-password: password
-    keyStoreType: PKCS12
+  port: 9000
+
 
 security:
   require-ssl: true
@@ -61,18 +59,17 @@ springdoc:
     path: /invest/me/api/swagger-ui
   api-docs:
     path: /invest/me/api/api-docs
-     
+
 multipart:
   enabled: true
-  
+
 cloudinary:
-  cloud_name: ${cloud_name}
-  api_key: ${cloud_key}
-  api_secret: ${cloud_secret}
-      
-        
+  cloud_name: techiprimer
+  api_key: 815176751335227
+  api_secret: Lst0rp_kjYatr-fAfjMycRS5BwQ
+
+
 app:
   firebase-configuration-file : school-project-investme-firebase-adminsdk-j5j12-b282a07030.json
 
-    
-              
+
