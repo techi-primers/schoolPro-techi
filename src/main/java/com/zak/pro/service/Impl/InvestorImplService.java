@@ -110,7 +110,7 @@ public class InvestorImplService implements InvestorService {
 	@Transactional
 	@Override
 	public Investor registerInvestor(InvestorDTO investordto) throws CustomException {
-    	logger.info("started posting a investoor.........");
+    	logger.info("started posting a investoor testing production.........");
 		if ((investordto != null) && (this.accountRepository.findByEmail(investordto.getEmail()) == null)
 				&& (this.accountRepository.findByMobile(investordto.getMobile()) == null)) {
 			Investor investor = this.modelMapper.map(investordto, Investor.class);
