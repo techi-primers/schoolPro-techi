@@ -1,9 +1,12 @@
 package com.zak.pro.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,5 +110,11 @@ public class ProjectController {
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
 	public void deleteProject(@PathVariable long id) throws Exception {
 		this.projectService.deleteProject(id);
+	}
+
+	@GetMapping("/searchProject/{searchKey}")
+	public ResponseEntity searchProject (@PathVariable String searchKey) {
+		return Optional.ofNullable(this.projectService.searchProjectsByKeyWord(searchKey))
+		.map(rec -> new ResponseEntity(rec,HttpStatus.OK)).orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
 	}
 }

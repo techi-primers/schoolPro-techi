@@ -1,14 +1,20 @@
 package com.zak.pro.service.Impl;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 import javax.transaction.Transactional;
 
+import com.fasterxml.jackson.databind.util.ArrayBuilders;
+import com.querydsl.core.BooleanBuilder;
+import static java.util.Comparator.comparingLong;
+import com.zak.pro.entity.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -23,12 +29,6 @@ import com.zak.pro.dto.CloudinaryResponseDTO;
 import com.zak.pro.dto.ProjectAddDTO;
 import com.zak.pro.dto.ProjectDTO;
 import com.zak.pro.dto.ProjectUpdateDTO;
-import com.zak.pro.entity.Account;
-import com.zak.pro.entity.Attachement;
-import com.zak.pro.entity.Company;
-import com.zak.pro.entity.Investor;
-import com.zak.pro.entity.Project;
-import com.zak.pro.entity.Student;
 import com.zak.pro.enumartion.AttachementType;
 import com.zak.pro.enumartion.Category;
 import com.zak.pro.exception.CustomException;
@@ -80,6 +80,8 @@ public class ProjectImplService implements ProjectService {
 
 	@Autowired
 	private FCMService fcmService;
+
+	private Logger logger = LogManager.getLogger(ProjectImplService.class);
 
 	/**
 	 * if categories is null return all projects if categories filled return all
@@ -371,6 +373,75 @@ public class ProjectImplService implements ProjectService {
 		attachement.setPublic_id(dto.getPublic_id());
 		attachement.setFormat(dto.getFormat());
 		return attachement;
+	}
+
+	@Override
+	public List<Project> searchProjectsByKeyWord(String keyword) {
+
+		List<Project> projectList = null;
+		try {
+			BooleanBuilder booleanBuilder = new BooleanBuilder();
+			QProject qProject = QProject.project;
+
+			if(keyword !=null || !keyword.isEmpty()) {
+				booleanBuilder.or(qProject.description.containsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.name.containsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.videoUrl.containsIgnoreCase(keyword));
+
+				booleanBuilder.or(qProject.student.firstName.containsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.student.lastName.containsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.student.branch.containsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.student.College.containsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.student.age.equalsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.student.address.containsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.student.country.containsIgnoreCase(keyword));
+				booleanBuilder.or(qProject.student.email.containsIgnoreCase(keyword));
+				//booleanBuilder.or(qProject.groupMember.contains(keyword));
+			}
+
+			projectList =
+					(List<Project>) this.projectRepository.findAll(booleanBuilder);
+
+
+			for( Project pro : this.projectRepository.findAll()) {
+					if(pro.getStatus().name().toLowerCase().equalsIgnoreCase(keyword.toLowerCase())) {
+						projectList.add(pro);
+					}
+			}
+
+			for( Project pro : this.projectRepository.findAll()) {
+				if(pro.getCategory().name().toLowerCase().equalsIgnoreCase(keyword.toLowerCase())) {
+					projectList.add(pro);
+				}
+			}
+
+			for( Project pro : this.projectRepository.findAll()) {
+
+				for(String member : pro.getGroupMember()) {
+					if(member.toLowerCase().contains(keyword.toLowerCase())) {
+						projectList.add(pro);
+						break;
+					}
+				}
+
+
+			}
+
+
+		} catch (Exception e) {
+			this.logger.warn(e);
+		}
+
+		return getUniqueProject(projectList);
+
+
+	}
+
+	public List<Project> getUniqueProject(final List<Project> projects) {
+		return   projects.stream()
+				.collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingLong(Project::getId))),
+						ArrayList::new));
+
 	}
 
 }
