@@ -2,7 +2,9 @@ package com.zak.pro.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
+import com.zak.pro.entity.Project;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,4 +40,5 @@ public interface ProjectService {
 
 	void deleteProject(Long id) throws CustomException, IOException;
 
+    List<Project> searchProjectsByKeyWord(String keyword);
 }
