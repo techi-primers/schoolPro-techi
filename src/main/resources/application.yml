@@ -29,8 +29,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: email
-    password: password
+    username: investmecustomersuport@gmail.com
+    password: aqfabdnkqtpatfkt
     sign: InvestMe Team
     location: United State
     properties:
