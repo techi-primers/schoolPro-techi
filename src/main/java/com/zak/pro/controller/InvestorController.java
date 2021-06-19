@@ -40,8 +40,13 @@ public class InvestorController {
 
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public Investor registerInvestor(@RequestBody InvestorDTO investordto) throws CustomException {
-		return this.investorService.registerInvestor(investordto);
+	public ResponseEntity registerInvestor(@RequestBody InvestorDTO investordto) throws CustomException {
+		Investor investor = this.investorService.registerInvestor(investordto);
+		if(investor!=null) {
+			return new ResponseEntity(investor,HttpStatus.OK);
+		} else {
+			return new ResponseEntity("issue with registering investor",HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@GetMapping
@@ -56,8 +61,9 @@ public class InvestorController {
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('INVESTOR')")
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
-	public void addCategories(@RequestBody List<Category> intrests) throws NoSuchMessageException, CustomException {
+	public ResponseEntity addCategories(@RequestBody List<Category> intrests) throws NoSuchMessageException, CustomException {
 		this.investorService.addCategories(intrests);
+		return new ResponseEntity("added categories",HttpStatus.OK);
 	}
 
 	@GetMapping("/favoris")
@@ -72,8 +78,9 @@ public class InvestorController {
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('INVESTOR')")
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
-	public void bookMarkedProject(@PathVariable Long id) throws NoSuchMessageException, CustomException {
+	public ResponseEntity bookMarkedProject(@PathVariable Long id) throws NoSuchMessageException, CustomException {
 		this.investorService.bookmarkProjectForInvestorAndCompany(id);
+		return new ResponseEntity("book marked project",HttpStatus.OK);
 	}
 
 	@DeleteMapping("/favoris/{id}")

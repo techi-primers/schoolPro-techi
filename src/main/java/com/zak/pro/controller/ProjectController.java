@@ -67,9 +67,14 @@ public class ProjectController {
 	@PostMapping()
 	@PreAuthorize("hasAuthority('STUDENT')")
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
-	public ProjectDTO createProject(@RequestBody ProjectAddDTO projectDto)
+	public ResponseEntity createProject(@RequestBody ProjectAddDTO projectDto)
 			throws NoSuchMessageException, CustomException {
-		return this.projectService.createProject(projectDto);
+		ProjectDTO project = this.projectService.createProject(projectDto);
+		if(project!=null) {
+			return new ResponseEntity(project,HttpStatus.OK);
+		} else {
+			return new ResponseEntity("Issue With Creating Project",HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@PutMapping()
@@ -82,9 +87,10 @@ public class ProjectController {
 	@PostMapping("{id}/attachements")
 	@PreAuthorize("hasAuthority('STUDENT')")
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
-	public void uploadAttachements(@PathVariable long id, @RequestParam("file") MultipartFile[] files,
+	public ResponseEntity uploadAttachements(@PathVariable long id, @RequestParam("file") MultipartFile[] files,
 			@RequestParam(required = false) int show) throws Exception {
 		this.projectService.uploadAttachements(id, files, show);
+		return new ResponseEntity("Upload attachements",HttpStatus.OK);
 	}
 
 	/*

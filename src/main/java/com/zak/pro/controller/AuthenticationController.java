@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,20 +33,27 @@ public class AuthenticationController {
 
 	@PostMapping("/authentication")
 	@ResponseStatus(HttpStatus.OK)
-	public JwtDTO authenticate(@RequestBody AuthenticationDTO authenticationDTO)
+	public ResponseEntity authenticate(@RequestBody AuthenticationDTO authenticationDTO)
 			throws AuthenticationException, IOException {
-		return this.authenticatonService.authenticateUser(authenticationDTO);
+		JwtDTO jwtDTO = this.authenticatonService.authenticateUser(authenticationDTO);
+		if(jwtDTO!=null) {
+			return new ResponseEntity(jwtDTO,HttpStatus.OK);
+		} else {
+			return new ResponseEntity("issue with authentication",HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@PostMapping("/totp")
 	@ResponseStatus(HttpStatus.OK)
-	public void saveTotp(@RequestBody TotpDTO totpdto) throws Exception {
+	public ResponseEntity saveTotp(@RequestBody TotpDTO totpdto) throws Exception {
 		this.authenticatonService.saveTotp(totpdto.getEmail());
+		return new ResponseEntity("saved totp",HttpStatus.OK);
 	}
 
 	@PostMapping("/reset")
 	@ResponseStatus(HttpStatus.OK)
-	public void forgetPassword(@RequestBody ForgetPasswordResetDTO passwordResetDTO) throws CustomException {
+	public ResponseEntity forgetPassword(@RequestBody ForgetPasswordResetDTO passwordResetDTO) throws CustomException {
 		this.authenticatonService.resetPassword(passwordResetDTO);
+		return new ResponseEntity("reset password done",HttpStatus.OK);
 	}
 }
