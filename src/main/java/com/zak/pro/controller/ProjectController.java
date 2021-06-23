@@ -89,8 +89,12 @@ public class ProjectController {
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
 	public ResponseEntity uploadAttachements(@PathVariable long id, @RequestParam("file") MultipartFile[] files,
 			@RequestParam(required = false) int show) throws Exception {
-		this.projectService.uploadAttachements(id, files, show);
-		return new ResponseEntity("Upload attachements",HttpStatus.OK);
+		if (files.length !=0) {
+			this.projectService.uploadAttachements(id, files, show);
+			return new ResponseEntity("Upload attachements", HttpStatus.OK);
+		} else {
+			return new ResponseEntity("Please add  attachements", HttpStatus.NOT_FOUND);
+		}
 	}
 
 	/*
