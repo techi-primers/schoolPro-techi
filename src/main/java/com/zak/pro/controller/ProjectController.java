@@ -61,6 +61,7 @@ public class ProjectController {
 	@PreAuthorize("hasAuthority('STUDENT')")
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
 	public List<ProjectDTO> getProjectsForConnectedStudent() {
+		System.out.println("get Project");
 		return this.projectService.getProjectsForConnectedStudent();
 	}
 
