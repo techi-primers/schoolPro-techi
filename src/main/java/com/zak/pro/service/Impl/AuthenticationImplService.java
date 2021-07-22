@@ -8,21 +8,21 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import com.zak.pro.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.zak.pro.dto.AuthenticationDTO;
-import com.zak.pro.dto.ForgetPasswordResetDTO;
-import com.zak.pro.dto.JwtDTO;
-import com.zak.pro.dto.MailDTO;
 import com.zak.pro.entity.Account;
 import com.zak.pro.entity.Company;
 import com.zak.pro.entity.Investor;
@@ -141,7 +141,43 @@ public class AuthenticationImplService implements AuthenticationService {
 		return "error";
 	}
 
-	@Transactional
+    @Override
+    public ResponseEntity changePassword(ChangePasswordResetDTO changePasswordResetDTO) throws CustomException{
+		String email = changePasswordResetDTO.getEmail();
+		String password =changePasswordResetDTO.getPassword();
+		String confirmPassword =changePasswordResetDTO.getConfirmPassword();
+		String newPassword =changePasswordResetDTO.getNewPassword();
+		if(email!=null && password!=null && confirmPassword!=null && newPassword!=null ) {
+			Account account = this.accountRepository.findByEmail(email);
+			if (account == null) {
+				throw new CustomException(
+						this.messageSource.getMessage("email.not.found", null, LocaleContextHolder.getLocale()));
+			}
+			if (!this.passwordUtil.isPasswordValid(newPassword)) {
+				throw new CustomException(
+						this.messageSource.getMessage("password.not.compliant", null, LocaleContextHolder.getLocale()));
+
+			}
+			if (!newPassword.equals(confirmPassword)) {
+				throw new CustomException(
+						this.messageSource.getMessage("password.confirmPassword.not.matched", null, LocaleContextHolder.getLocale()));
+
+			}
+			if(BCrypt.checkpw(password, account.getPassword())) {
+				account.setPassword(this.bcrypt.encode(newPassword));
+				Account savedAccountObj = this.accountRepository.save(account);
+				return new ResponseEntity(savedAccountObj,HttpStatus.OK);
+			}else {
+				return new ResponseEntity("older password is not matched",HttpStatus.NOT_FOUND);
+			}
+
+		} else {
+			return new ResponseEntity("unsatisfied input parameters",HttpStatus.NOT_FOUND);
+		}
+
+    }
+
+    @Transactional
 	@Override
 	public void saveTotp(String email) throws Exception {
 		Account account = this.accountRepository.findByEmail(email);
