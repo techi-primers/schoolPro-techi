@@ -1,18 +1,17 @@
 package com.zak.pro.dto;
 
-import java.util.List;
-
 import com.zak.pro.entity.Attachement;
-import com.zak.pro.entity.Investor;
 import com.zak.pro.enumartion.Category;
 import com.zak.pro.enumartion.ProjectStatus;
+
+import java.util.List;
 
 /**
  * 
  * @author Elkotb Zakaria
  *
  */
-public class ProjectDTO {
+public class ProjectInvesterDTO {
 
 	private Long id;
 	private String name;
@@ -24,7 +23,6 @@ public class ProjectDTO {
 	private StudentDTO student;
 	private Long studentId;
 	private List<String> groupMember;
-	private List<Investor> investorList;
 
 	public Long getId() {
 		return this.id;
@@ -90,7 +88,7 @@ public class ProjectDTO {
 		this.videoUrl = videoUrl;
 	}
 
-	public ProjectDTO() {
+	public ProjectInvesterDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -111,11 +109,4 @@ public class ProjectDTO {
 		this.studentId = studentId;
 	}
 
-	public List<Investor> getInvestorList() {
-		return investorList;
-	}
-
-	public void setInvestorList(List<Investor> investorList) {
-		this.investorList = investorList;
-	}
 }

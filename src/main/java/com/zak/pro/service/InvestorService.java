@@ -33,4 +33,6 @@ public interface InvestorService {
     ResponseEntity assignProjectToInvester(Long projectId);
 
     ResponseEntity getInvesterAssignedProjects();
+
+	ResponseEntity deleteAssignedProjectByInvester(Long projectId);
 }

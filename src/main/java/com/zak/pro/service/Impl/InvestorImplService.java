@@ -251,4 +251,53 @@ public class InvestorImplService implements InvestorService {
 		}).orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
 
     }
+
+    @Override
+    public ResponseEntity deleteAssignedProjectByInvester(Long projectId) {
+
+		if(projectId!=null) {
+			Optional<Project> project = projectRepository.findById(projectId);
+			return project.map(pro -> {
+
+				String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				if(email!=null) {
+					Account account = this.accountRepository.findByEmail(email);
+
+					return Optional.ofNullable(account).map(acc-> {
+						Long accountId = acc.getId();
+
+						try{
+
+							List<InvesterProject> investerProjectsRes =
+									this.investorProjectRepository.findByProjectIdAndInvesterId(projectId, accountId);
+							if(investerProjectsRes.size()!=0) {
+
+								investerProjectsRes.stream().forEach(rec-> {
+									this.investorProjectRepository.delete(rec);
+									logger.info("invester projects deleted!!");
+								});
+
+								return new ResponseEntity("project deleted", HttpStatus.OK);
+							} else {
+								return new ResponseEntity(HttpStatus.NOT_FOUND);
+							}
+
+						}catch (Exception e ) {
+							e.printStackTrace();
+							logger.info("catch when deleting investerproject...");
+							return new ResponseEntity(HttpStatus.NOT_FOUND);
+						}
+
+					}).orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
+
+				} else {
+					return new ResponseEntity(HttpStatus.NOT_FOUND);
+				}
+
+			}).orElse( new ResponseEntity(HttpStatus.NOT_FOUND));
+		}else {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+
+    }
 }

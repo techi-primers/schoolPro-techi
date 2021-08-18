@@ -98,6 +98,13 @@ public class InvestorController {
 		return this.investorService.assignProjectToInvester(projectId);
 	}
 
+	@PostMapping("/deleteAssignedProjectByInvester/{projectId}")
+	@PreAuthorize("hasAuthority('INVESTOR')")
+	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
+	public ResponseEntity deleteAssignedProjectByInvester(@PathVariable Long projectId)  {
+		return this.investorService.deleteAssignedProjectByInvester(projectId);
+	}
+
 	@GetMapping("/getInvesterAssignedProjects")
 	@PreAuthorize("hasAuthority('INVESTOR')")
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
