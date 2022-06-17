@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,13 @@ public class StudentController {
 
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public Student registerStudent(@RequestBody StudentDTO studentdto) throws CustomException {
-		return this.studentService.registerStudent(studentdto);
+	public ResponseEntity registerStudent(@RequestBody StudentDTO studentdto) throws CustomException {
+		Student student = this.studentService.registerStudent(studentdto);
+		if(student!=null) {
+			return new ResponseEntity(student, HttpStatus.OK);
+		} else {
+			return new ResponseEntity("Issue With Registering Student", HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@GetMapping("/favoris/investors")
@@ -62,8 +68,9 @@ public class StudentController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAuthority('STUDENT')")
 	@Operation(security = { @SecurityRequirement(name = "Bearer Token") })
-	public void bookMarkedInvestor(@PathVariable Long id) throws CustomException {
+	public ResponseEntity bookMarkedInvestor(@PathVariable Long id) throws CustomException {
 		this.studentService.bookMarkedInvestorOrCompany(id);
+		return new ResponseEntity("Booked Marked",HttpStatus.OK);
 	}
 
 	@DeleteMapping("/favoris/{id}")

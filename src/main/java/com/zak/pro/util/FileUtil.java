@@ -35,8 +35,12 @@ public class FileUtil {
 
 	public boolean isFileListValid(MultipartFile[] files) throws CustomException {
 		for (MultipartFile file : files) {
-			if (!Pattern.matches("([^\\s]+(\\.(?i)(jpg|jpeg|png|mp3|MP3|JPG|JPEG|PNG|pdf))$)",
-					file.getOriginalFilename().replace(" ", "")) || file.isEmpty()) {
+			if(file.isEmpty()) {
+				throw new CustomException(this.messageSource.getMessage("file.content.null", null,
+						LocaleContextHolder.getLocale()));
+			}
+			if (!Pattern.matches("([^\\s]+(\\.(?i)(doc|docx|dot|txt|jpg|jpeg|png|mp3|MP3|JPG|JPEG|PNG|pdf))$)",
+					file.getOriginalFilename().replace(" ", ""))) {
 				throw new CustomException(this.messageSource.getMessage("file.format.not.supported", null,
 						LocaleContextHolder.getLocale()));
 			}

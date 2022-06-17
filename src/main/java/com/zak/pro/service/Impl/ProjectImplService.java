@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.util.ArrayBuilders;
 import com.querydsl.core.BooleanBuilder;
 import static java.util.Comparator.comparingLong;
 import com.zak.pro.entity.*;
+import com.zak.pro.repository.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -35,11 +36,6 @@ import com.zak.pro.exception.CustomException;
 import com.zak.pro.extern.cloudinary.CloudinaryService;
 import com.zak.pro.extern.firebase.FCMService;
 import com.zak.pro.extern.firebase.PushNotificationRequest;
-import com.zak.pro.repository.AccountRepository;
-import com.zak.pro.repository.CompanyRepository;
-import com.zak.pro.repository.InvestorRepository;
-import com.zak.pro.repository.ProjectRepository;
-import com.zak.pro.repository.StudentRepository;
 import com.zak.pro.service.ProjectService;
 import com.zak.pro.util.FileUtil;
 
@@ -80,6 +76,9 @@ public class ProjectImplService implements ProjectService {
 
 	@Autowired
 	private FCMService fcmService;
+
+	@Autowired
+	private InvesterProjectRepository investerProjectRepository;
 
 	private Logger logger = LogManager.getLogger(ProjectImplService.class);
 
@@ -146,8 +145,23 @@ public class ProjectImplService implements ProjectService {
 	public List<ProjectDTO> getProjectsForConnectedStudent() {
 		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<Project> projects = this.projectRepository.findByStudent_email(email);
-		return projects.stream().map(project -> this.modelMapper.map(project, ProjectDTO.class))
-				.peek(projectDto -> projectDto.setStudent(null)).collect(Collectors.toList());
+
+		return projects.stream().map(project -> {
+			List<Investor> listOfInvestors = this.investerProjectRepository.findByProjectId(project.getId()).stream().map(rec -> {
+
+				Optional<Investor> investor = this.investorRepository.findById(rec.getInvesterId());
+				if(investor.isPresent()) {
+					return investor.get();
+				} else {
+					return null;
+				}
+			}).collect(Collectors.toList());
+
+			ProjectDTO mappedObj = this.modelMapper.map(project, ProjectDTO.class);
+			if(listOfInvestors.size()!=0)
+				mappedObj.setInvestorList(listOfInvestors);
+			return mappedObj;
+		}).peek(projectDto -> projectDto.setStudent(null)).collect(Collectors.toList());
 	}
 
 	@Override

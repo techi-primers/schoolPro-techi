@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,8 +60,13 @@ public class AccountController {
 
 	@PostMapping("/pdp")
 	@ResponseStatus(HttpStatus.CREATED)
-	public UploadImageDTO uploadProfilImage(@RequestPart MultipartFile file) throws CustomException, IOException {
-		return this.accountService.uploadProfilImage(file);
+	public ResponseEntity uploadProfilImage(@RequestPart MultipartFile file) throws CustomException, IOException {
+		UploadImageDTO uploadImageDTO = this.accountService.uploadProfilImage(file);
+		if(uploadImageDTO!=null) {
+			return new ResponseEntity(uploadImageDTO,HttpStatus.OK);
+		} else {
+			return new ResponseEntity("issue with upload profile image",HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@PutMapping("/pdp/image")

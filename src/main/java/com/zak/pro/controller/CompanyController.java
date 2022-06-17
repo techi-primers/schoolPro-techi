@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +35,13 @@ public class CompanyController {
 
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public Company registerCompany(@RequestBody CompanyDTO companydto) throws CustomException {
-		return this.companyService.registerCompany(companydto);
+	public ResponseEntity registerCompany(@RequestBody CompanyDTO companydto) throws CustomException {
+		Company company = this.companyService.registerCompany(companydto);
+		if(company!=null) {
+			return new ResponseEntity(company,HttpStatus.OK);
+		} else {
+			return new ResponseEntity("Issue with registering company", HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@GetMapping
