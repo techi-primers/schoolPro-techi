@@ -6,7 +6,7 @@ spring:
   application:
     name: investMe
   datasource:
-    url: jdbc:postgresql://investmebeta-db.c2ymzed7r3ta.us-east-2.rds.amazonaws.com:5432/investmebeta_db?currentSchema=investmebeta_db
+    url: jdbc:postgresql://investmebeta-db-v2.c2ymzed7r3ta.us-east-2.rds.amazonaws.com:5432/investmebeta_db_v2?currentSchema=investmebeta_db_v2
     username: postgres
     password: postgrestechi
     testwhileIdle: true
